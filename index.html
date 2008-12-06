@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css">
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/base/base-min.css">
+    <script src="http://www.google.com/jsapi">
+    </script>
+    <script>
+      // Load jQuery
+      google.load("jquery", "1");
+      google.setOnLoadCallback(function(){
+        var tests = [[{
+          runs: 100,
+          tests: 2,
+          title: "Not using an id as the top-most selector",
+          description: "With a long DOM, not using an id to narrow one's search can be bad."
+        }, {
+          name: 'Without id',
+          description: "Not using an id as the top selector",
+          test: function(){
+            console.log('ho');
+          }
+        }, {
+          name: 'test2',
+          description: "Using an id as the top selector",
+          test: function(){
+            console.log('ha');
+          }
+        }], ];
+        
+        $.each(tests, function(){
+          var meta = this[0];
+          var output = $("<div>").append("<fieldset><legend>" + meta.title + "</legend></fieldset>").appendTo("#tests");
+          output.append(meta.description);
+          var tests = [];
+          $.each(this, function(i){
+            if (i == 0) {
+              return; // skip to next iteration
+            }
+            var one_test = $("<div><h2>" + this.name + "</h2></div>").appendTo(output);
+            one_test.append(this.description);
+            tests.push(this.test);
+          });
+          
+          $("<button>Run test</button>").click(function(){
+            var times = [];
+            for(var j = 0; j < meta['tests']; j++){
+              times[j] = 0;
+            }
+            var timer;
+            for(var i = 0; i < meta['runs']; i++){
+              for(var j = 0; j < meta['tests']; j++){
+                timer = new Date();
+                tests[j]();
+                times[j] += new Date() - timer;
+              }
+            }
+            console.log('test ' + 1 + ": " + times[0]);
+            console.log('test ' + 2 + ": " + times[1]);
+          }).appendTo(output);
+        });
+      });
+    </script>
+    <title>Virtual Library</title>
+    <div id="tests">
+    </div>
+  </head>
+  <body>
+  </body>
+</html>
