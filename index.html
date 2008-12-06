@@ -11,21 +11,30 @@
       google.load("jquery", "1");
       google.setOnLoadCallback(function(){
         var tests = [[{
-          runs: 100,
-          tests: 2,
+          runs: 250,
           title: "Not using an id as the top-most selector",
-          description: "With a long DOM, not using an id to narrow one's search can be bad."
+          description: "With a long DOM, not using an id to narrow one's search can be bad.",
+          callbacks: {
+            in_progress: function(times){
+              if(Math.random() < 0.05){
+                console.info(times);
+              }
+            },
+            done: function(times){
+              console.info(times);
+            }
+          }
         }, {
           name: 'Without id',
           description: "Not using an id as the top selector",
           test: function(){
-            console.log('ho');
+            $(".top_class");
           }
         }, {
           name: 'test2',
           description: "Using an id as the top selector",
           test: function(){
-            console.log('ha');
+            $("#test_dom.top_class");
           }
         }], ];
         
@@ -40,32 +49,51 @@
             }
             var one_test = $("<div><h2>" + this.name + "</h2></div>").appendTo(output);
             one_test.append(this.description);
-            tests.push(this.test);
+            //tests.push(this.test);
           });
+          var test = this;
           
           $("<button>Run test</button>").click(function(){
             var times = [];
-            for(var j = 0; j < meta['tests']; j++){
-              times[j] = 0;
+            for (var j = 1; j < test.length; j++) {
+              times[j - 1] = 0;
             }
             var timer;
-            for(var i = 0; i < meta['runs']; i++){
-              for(var j = 0; j < meta['tests']; j++){
+            for (var i = 0; i < meta['runs']; i++) {
+              for (var j = 1; j < test.length; j++) {
+                try {
+                  test[j].setup();
+                } catch (e) {
+                }
+                
                 timer = new Date();
-                tests[j]();
-                times[j] += new Date() - timer;
+                
+                test[j].test();
+                
+                var incremental_time = new Date() - timer;
+                times[j - 1] += incremental_time;
+                
+                try {
+                  test[j].teardown();
+                } catch (e) {
+                }
               }
+              meta.callbacks.in_progress(times);
             }
-            console.log('test ' + 1 + ": " + times[0]);
-            console.log('test ' + 2 + ": " + times[1]);
+            meta.callbacks.done(times);
           }).appendTo(output);
         });
       });
     </script>
     <title>Virtual Library</title>
-    <div id="tests">
-    </div>
   </head>
   <body>
+    <div id="tests">
+    </div>
+    <div id="test_dom">
+      <div class="top_class">
+        <span>Hello</span>
+      </div>
+    </div>
   </body>
 </html>
