@@ -1,0 +1,28 @@
+.test {
+    clear: both;
+    color: gray;
+} .test > h2.title {
+  border-bottom: 2px solid gray;
+  width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: auto;
+} .test > .description {
+    width: 20%;
+    float: left;
+    padding-bottom: 10px;
+} h3 {
+    text-decoration: underline;
+} .test > .test_description {
+    width: 30%;
+    float: left;
+    padding-bottom: 10px;
+} .test > .results {
+    width: 50%;
+    float: left;
+    padding-bottom: 10px;
+} .test > .spacer {
+    clear: both;
+} #test_dom {
+    clear: both;
+}
