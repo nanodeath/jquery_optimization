@@ -6,47 +6,66 @@
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/base/base-min.css">
     <script src="http://www.google.com/jsapi">
     </script>
+    <style type="text/css">
+      
+    </style>
     <script>
-    
     var tests_to_run = [];
+    
+    var precanned_callbacks = {
+      race: {
+        initialize: function(race){
+          var data = new google.visualization.DataTable();
+          data.addColumn("string", "tests")
+          for (var i = 1; i < race.length; i++) {
+            data.addColumn("number", race[i].name);
+          }
+          data.addRows(1);
+          data.setValue(0, 0, '');
+          for (var i = 1; i < race.length; i++) {
+            data.setValue(0, i, 0);
+          }
+          this.data = data;
+          var div = $('#' + race[0].id + " .results")[0];
+          $(div).html('');
+          var chart = new google.visualization.ColumnChart(div);
+          this.chart = chart;
+          
+          this.redraw_graph = function(times){
+            times = times || [];
+            for (var i = 0; i < times.length; i++) {
+              this.data.setValue(0, i + 1, times[i]);
+            }
+            this.chart.draw(this.data, {
+              width: 400,
+              height: 240,
+              is3D: false,
+              titleY: "total milliseconds"
+            });
+          }
+          
+          $(div).append("Runs: ");
+          this.runs = $("<span>").appendTo(div);
+          this.runs_count = 0;
+          
+          this.redraw_graph();
+        }
+      }
+    }
+    
     // Load jQuery
     google.load("jquery", "1");
-    google.load("visualization", "1", {packages: ["columnchart"]});
+    google.load("visualization", "1", {
+      packages: ["columnchart"]
+    });
     google.setOnLoadCallback(function(){
       var tests = [[{
         runs: 250,
+        id: 'not_using_id',
         title: "Not using an id as the top-most selector",
         description: "With a long DOM, not using an id to narrow one's search can be bad.",
         callbacks: {
-          initialize: function(){
-            var data = new google.visualization.DataTable();
-            data.addColumn("string", "tests")
-            data.addColumn("number", "Not using an id");
-            data.addColumn("number", "Using an id");
-            data.addRows(1);
-            data.setValue(0, 0, '');
-            data.setValue(0, 1, 0);
-            data.setValue(0, 2, 0);
-            this.data = data;
-            var div = $(".results")[0];
-            $(div).html('');
-            var chart = new google.visualization.ColumnChart(div);
-            this.chart = chart;
-            
-            this.redraw_graph = function(times){
-              times = times || [];
-              for(var i = 0; i < times.length; i++){
-                this.data.setValue(0, i+1, times[i]);
-              }
-              this.chart.draw(this.data, {width: 400, height: 240, is3D: false, titleY: "total milliseconds"});
-            }
-            
-            $(div).append("Runs: ");
-            this.runs = $("<span>").appendTo(div);
-            this.runs_count = 0;
-            
-            this.redraw_graph();
-          },
+          initialize: precanned_callbacks.race.initialize,
           in_progress: function(times){
             if (Math.random() < 0.1) {
               this.redraw_graph(times);
@@ -74,11 +93,11 @@
       
       $.each(tests, function(){
         var meta = this[0];
-        var output = $("<div>").append("<fieldset><legend>" + meta.title + "</legend></fieldset>").appendTo("#tests");
+        var output = $("<div id=\"" + meta.id + "\">").append("<fieldset><legend>" + meta.title + "</legend></fieldset>").appendTo("#tests");
         output.append(meta.description);
         $.each(this, function(i){
           if (i == 0) {
-            return; // skip to next iteration
+            return; // skip to next iteration, we don't want the metadata in the first array element
           }
           var race_output = $("<div><h2>" + this.name + "</h2></div>");
           race_output.append(this.description);
@@ -125,9 +144,8 @@
               return times;
             })
           }
-          meta.callbacks.initialize();
+          meta.callbacks.initialize(race);
           run_next_test(0, race);
-          $(this).attr('disabled', false);
         }).appendTo(output);
         output.append("<div class=\"results\">No results yet -- run the test!</div>")
       });
