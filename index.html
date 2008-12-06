@@ -7,85 +7,143 @@
     <script src="http://www.google.com/jsapi">
     </script>
     <script>
-      // Load jQuery
-      google.load("jquery", "1");
-      google.setOnLoadCallback(function(){
-        var tests = [[{
-          runs: 250,
-          title: "Not using an id as the top-most selector",
-          description: "With a long DOM, not using an id to narrow one's search can be bad.",
-          callbacks: {
-            in_progress: function(times){
-              if(Math.random() < 0.05){
-                console.info(times);
+    
+    var tests_to_run = [];
+    // Load jQuery
+    google.load("jquery", "1");
+    google.load("visualization", "1", {packages: ["columnchart"]});
+    google.setOnLoadCallback(function(){
+      var tests = [[{
+        runs: 250,
+        title: "Not using an id as the top-most selector",
+        description: "With a long DOM, not using an id to narrow one's search can be bad.",
+        callbacks: {
+          initialize: function(){
+            var data = new google.visualization.DataTable();
+            data.addColumn("string", "tests")
+            data.addColumn("number", "Not using an id");
+            data.addColumn("number", "Using an id");
+            data.addRows(1);
+            data.setValue(0, 0, '');
+            data.setValue(0, 1, 0);
+            data.setValue(0, 2, 0);
+            this.data = data;
+            var div = $(".results")[0];
+            $(div).html('');
+            var chart = new google.visualization.ColumnChart(div);
+            this.chart = chart;
+            
+            this.redraw_graph = function(times){
+              times = times || [];
+              for(var i = 0; i < times.length; i++){
+                this.data.setValue(0, i+1, times[i]);
               }
-            },
-            done: function(times){
-              console.info(times);
+              this.chart.draw(this.data, {width: 400, height: 240, is3D: false, titleY: "total milliseconds"});
             }
+            
+            $(div).append("Runs: ");
+            this.runs = $("<span>").appendTo(div);
+            this.runs_count = 0;
+            
+            this.redraw_graph();
+          },
+          in_progress: function(times){
+            if (Math.random() < 0.1) {
+              this.redraw_graph(times);
+            }
+            this.runs_count++;
+            $(this.runs).text(this.runs_count);
+          },
+          done: function(times){
+            this.redraw_graph(times);
           }
-        }, {
-          name: 'Without id',
-          description: "Not using an id as the top selector",
-          test: function(){
-            $(".top_class");
+        }
+      }, {
+        name: 'Without id',
+        description: "Not using an id as the top selector",
+        test: function(){
+          $(".top_class");
+        }
+      }, {
+        name: 'With id',
+        description: "Using an id as the top selector",
+        test: function(){
+          $("#test_dom.top_class");
+        }
+      }], ];
+      
+      $.each(tests, function(){
+        var meta = this[0];
+        var output = $("<div>").append("<fieldset><legend>" + meta.title + "</legend></fieldset>").appendTo("#tests");
+        output.append(meta.description);
+        $.each(this, function(i){
+          if (i == 0) {
+            return; // skip to next iteration
           }
-        }, {
-          name: 'test2',
-          description: "Using an id as the top selector",
-          test: function(){
-            $("#test_dom.top_class");
-          }
-        }], ];
+          var race_output = $("<div><h2>" + this.name + "</h2></div>");
+          race_output.append(this.description);
+          race_output.appendTo(output);
+        });
+        var race = this;
         
-        $.each(tests, function(){
-          var meta = this[0];
-          var output = $("<div>").append("<fieldset><legend>" + meta.title + "</legend></fieldset>").appendTo("#tests");
-          output.append(meta.description);
-          var tests = [];
-          $.each(this, function(i){
-            if (i == 0) {
-              return; // skip to next iteration
-            }
-            var one_test = $("<div><h2>" + this.name + "</h2></div>").appendTo(output);
-            one_test.append(this.description);
-            //tests.push(this.test);
-          });
-          var test = this;
-          
-          $("<button>Run test</button>").click(function(){
-            var times = [];
-            for (var j = 1; j < test.length; j++) {
-              times[j - 1] = 0;
-            }
-            var timer;
-            for (var i = 0; i < meta['runs']; i++) {
-              for (var j = 1; j < test.length; j++) {
-                try {
-                  test[j].setup();
-                } catch (e) {
-                }
+        $("<button>Run race</button>").click(function(){
+          $(this).attr('disabled', true);
+          var times = [];
+          for (var j = 1; j < race.length; j++) {
+            times[j - 1] = 0;
+          }
+          tests_to_run = [];
+          var timer;
+          for (var i = 0; i < meta['runs']; i++) {
+            tests_to_run.push(function(){
+              for (var j = 1; j < race.length; j++) {
+              
+                if ($.isFunction(race[j].setup)) {
+                  try {
+                    race[j].setup()
+                  } catch (e) {
+                    throw ("Setup " + j + " failed for test \"" + meta.title + "\": " + e);
+                  }
+                };
                 
                 timer = new Date();
                 
-                test[j].test();
+                race[j].test();
                 
                 var incremental_time = new Date() - timer;
                 times[j - 1] += incremental_time;
                 
-                try {
-                  test[j].teardown();
-                } catch (e) {
+                if ($.isFunction(race[j].teardown)) {
+                  try {
+                    race[j].teardown();
+                  } catch (e) {
+                    throw ("Teardown " + j + " failed for test \"" + meta.title + "\": " + e);
+                  }
                 }
               }
               meta.callbacks.in_progress(times);
-            }
-            meta.callbacks.done(times);
-          }).appendTo(output);
-        });
+              return times;
+            })
+          }
+          meta.callbacks.initialize();
+          run_next_test(0, race);
+          $(this).attr('disabled', false);
+        }).appendTo(output);
+        output.append("<div class=\"results\">No results yet -- run the test!</div>")
       });
+    });
+    var run_next_test = function(test_number, test){
+      var times = tests_to_run[test_number](test_number);
+      if (test_number + 1 < tests_to_run.length) {
+        setTimeout(function(){
+          run_next_test(test_number + 1, test)
+        }, 10);
+      } else {
+        test[0].callbacks.done(times);
+      }
+    }
     </script>
-    <title>Virtual Library</title>
+    <title>Racing</title>
   </head>
   <body>
     <div id="tests">
