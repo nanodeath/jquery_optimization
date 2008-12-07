@@ -30,7 +30,7 @@ var tests = [[{
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }, explanation: "Setting the attribute directly on the DOM object will naturally be the fastest, as it's not a method call and it's what the other methods ultimately end up doing.  But why is using attr so much faster than hide()?  Turns out hide() does a lot of behind the scenes magic that most likely, you don't even need."
+  }, explanation: "Setting the attribute directly on the DOM object will naturally be the fastest, as it's not a method call and it's what the other methods ultimately end up doing.  But why is using attr() so much faster than hide()?  Turns out hide() does a lot of behind the scenes magic that most likely, you don't even need (at least in this case)."
 }, {
   name: 'display none',
   description: "Using attr('display', 'none') to hide a selection",
