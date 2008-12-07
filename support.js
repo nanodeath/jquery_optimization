@@ -51,7 +51,7 @@ var precanned_callbacks = {
           height: race[0].chart_height || 240,
           is3D: false,
           titleY: "total milliseconds",
-          title: "Result after " + this.runs_count
+          title: "Result after " + this.runs_count + " runs"
         });
       }
       
