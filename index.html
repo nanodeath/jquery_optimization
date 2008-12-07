@@ -5,72 +5,40 @@
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css">
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/base/base-min.css">
     <link rel="stylesheet" type="text/css" href="support/styles.css">
-    <script src="http://www.google.com/jsapi" type="text/javascript"></script>
-    <script type="text/javascript"></script>
-    <script src="support/support.min.js"></script>
-    <script src="support/tests.min.js"></script>
+    <script src="http://www.google.com/jsapi" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+    </script>
+    <script src="support/support.min.js">
+    </script>
+    <script src="support/tests.min.js">
+    </script>
     <title>Racing</title>
   </head>
   <body>
     <h1>jQuery performance and optimization</h1>
-    <p>At some point, you must have wondered "how much is this operation
-    really costing me?"  Well, hopefully some of the following tests will be
-    helpful in answering that.</p>
-    <p>Note: don't run more than one test at a time...it doesn't work.</p>
-    <p>Interested in the source?  Either browse it right here or at its <a href="http://github.com/nanodeath/jquery_optimization/">github location</a></p>
+    <p>
+      At some point, you must have wondered "how much is this operation
+      really costing me?"  Well, hopefully some of the following tests will be
+      helpful in answering that.
+    </p>
+    <p>
+      Note: don't run more than one test at a time...it doesn't work.
+    </p>
+    <p>
+      Interested in the source?  Either browse it right here or at its <a href="http://github.com/nanodeath/jquery_optimization/">github location</a>
+    </p>
     <div id="tests">
     </div>
-    <div id="test_dom">
-      <div class="top_class" id="has_an_id_too">
-        <span>Test dom! Hello</span>
-        <ul id="top_list">
-          <li>
-            element 1
-          </li>
-          <li>
-            element 2
-          </li>
-          <li class="turtle">
-            element 3.  awkward turtle...
-          </li>
-          <li>
-            Surprise!
-            <ul id="inner_list">
-              <li>
-                It's another list!
-              </li>
-              <li class="monkey">
-                Yes, it keeps going.  I'm a monkey.
-              </li>
-              <li>
-                Okay it's done now...
-              </li>
-            </ul>
-          </li>
-          <li>
-            Oh no, it's...
-            <ul id="inner_list">
-              <li>
-                It's another list!
-              </li>
-              <li class="tofu">
-                Er...it's a tofu.
-              </li>
-              <li id="last_one">
-                That's enough silly for now.
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div>Other testbeds...
-    <ul>
-      <li>
-        <a href="http://www.slasdot.org">Slashdot</a>
-        <iframe src="example/Slashdot.html"></iframe>
-      </li>
-    </ul>
+    <div>
+      Testbeds...
+      <ul>
+        <li>
+          <a href="http://www.slasdot.org">Slashdot</a>
+          <iframe src="example/Slashdot.html">
+          </iframe>
+        </li>
+      </ul>
     </div>
   </body>
 </html>
