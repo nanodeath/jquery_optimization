@@ -64,16 +64,16 @@ var tests = [[{
 }, ], [{
   runs: 200,
   id: 'not_saving_object',
-  title: "Saving selection in an object vs. not",
-  description: "How much difference is there in saving a selection?",
+  title: "Saving selection in an object vs. not (applied example)",
+  description: "How much difference is there in saving a selection?  Let us test by grabbing a selection 6 times.</p><p>Note: This is an applied example, meaning I threw in some other stuff to make things more interesting/relevant, but affects the results.",
   callbacks: {
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }
+  }, chart_width: 500
 }, {
   name: "Not saving selection",
-  description: "Using $ to grab the same selection 5 times",
+  description: "Using $ to grab the same selection",
   test: function(){
     $(".top_class").hide();
     $(".top_class").show();
@@ -87,7 +87,7 @@ var tests = [[{
   }
 }, {
   name: "Saving a selection",
-  description: "Only using $ once to grab a selection 5 times",
+  description: "Only using $ once to grab the selection",
   test: function(){
     var t = $(".top_class").hide();
     t.show();
@@ -203,5 +203,27 @@ var tests = [[{
       $(this);//.hide();
       $(this);//.show();
     })
+  }
+}], [{
+  runs: 200,
+  id: 'unnecessary_id_tag',
+  title: "TMI: More specific selectors aren't always better",
+  description: "If you're already calling out an id, you don't need to also specify a tag.  Why?  Because ids are already unique, and this just forces another O(n) iteration.",
+  callbacks: {
+    initialize: precanned_callbacks.race.initialize_main,
+    in_progress: precanned_callbacks.race.in_progress_main,
+    done: precanned_callbacks.race.done_main
+  }
+}, {
+  name: "With tag",
+  description: "Using a tag with an id selector",
+  test: function(){
+    $("li#last_one")
+  }
+}, {
+  name: "Without tag",
+  description: "Not using a tag with an id selector",
+  test: function(){
+    $("#last_one")
   }
 }]];
