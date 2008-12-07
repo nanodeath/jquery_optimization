@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-dir = ARGV[0] || File.dirname(__FILE__)
+dir = ARGV[0] || File.dirname(__FILE__) + '/..'
 js_files = Dir[dir + '/support/**/*.js']
 
 js_files.each do |f|
