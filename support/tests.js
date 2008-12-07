@@ -13,14 +13,12 @@ var tests = [[{
   name: 'Without id',
   description: "Not using an id as the top selector",
   test: function(){
-    //$(".top_class");
     $(".article", slashdot)
   }
 }, {
   name: 'With id',
   description: "Using an id as the top selector",
   test: function(){
-    //$("#test_dom .top_class");
     $("#firehoselist .article", slashdot)
   }
 }], [{
@@ -37,39 +35,29 @@ var tests = [[{
   name: 'display none',
   description: "Using attr('display', 'none') to hide a selection",
   teardown: function(){
-    //$("#has_an_id_too").attr("display", '');
     $("#firehoselist", slashdot).attr("display", '');
   },
   test: function(){
-    //$("#has_an_id_too").attr('display', 'none');
     $("#firehoselist", slashdot).attr("display", 'none');
   }
 }, {
   name: 'hide()',
   description: "Using hide() to hide a selection",
   teardown: function(){
-    //$("#has_an_id_too").show();
     $("#firehoselist", slashdot).show();
   },
   test: function(){
-    //$("#has_an_id_too").hide();
     $("#firehoselist", slashdot).hide();
   }
 }, {
   name: 'attribute',
   description: "Using the DOM property to set display to none",
   teardown: function(){
-//    $("#has_an_id_too").each(function(){
-//      this.style.display = '';
-//    });
     $("#firehoselist", slashdot).each(function(){
       this.style.display = '';
     });
   },
   test: function(){
-//    $("#has_an_id_too").each(function(){
-//      this.style.display = 'none';
-//    });
     $("#firehoselist", slashdot).each(function(){
       this.style.display = 'none';
     });
@@ -89,12 +77,6 @@ var tests = [[{
   name: "Not saving selection",
   description: "Using $ to grab the same selection",
   test: function(){
-//    $(".top_class").hide();
-//    $(".top_class").show();
-//    $(".top_class").hide();
-//    $(".top_class").show();
-//    $(".top_class").hide();
-//    $(".top_class").show();
     $("#firehoselist", slashdot).hide();
     $("#firehoselist", slashdot).show();
     $("#firehoselist", slashdot).hide();
@@ -106,7 +88,6 @@ var tests = [[{
   name: "Saving a selection",
   description: "Only using $ once to grab the selection",
   test: function(){
-    //var t = $(".top_class").hide();
     var t = $("#firehoselist", slashdot).hide();
     t.show();
     t.hide();
@@ -130,28 +111,24 @@ var tests = [[{
   name: "find()",
   description: 'Using find to get a class',
   test: function(){
-//    $("#top_list").find(".turtle");
     $("#firehoselist", slashdot).find('.article');
   }
 }, {
   name: 'children()',
   description: 'Using children to get a class',
   test: function(){
-//    $("#top_list").children(".turtle");
     $("#firehoselist", slashdot).children('.article');
   }
 }, {
   name: "css selector: find",
   description: 'Using css find to get a class',
   test: function(){
-//    $("#top_list .turtle");
     $("#firehoselist .article", slashdot);
   }
 }, {
   name: 'css selector: children',
   description: 'Using css children to get a class',
   test: function(){
-//    $("#top_list > .turtle");
     $("#firehoselist > .article", slashdot);
   }
 }], [{
@@ -168,7 +145,6 @@ var tests = [[{
   name: "each()",
   description: "using each to iterate over a selection",
   test: function(){
-//    $("li").each(function(){
     $("li.bang", slashdot).each(function(){
       var li = $(this);
     });
@@ -177,7 +153,6 @@ var tests = [[{
   name: "for, indexed",
   description: "using a for loop to iterate over elements",
   test: function(){
-//    var lis = $("li");
     var lis = $("li.bang", slashdot);
     for (var i = 0, len = lis.length; i < len; i++) {
       var li = $(lis[i]);
@@ -187,7 +162,6 @@ var tests = [[{
   name: "for...in",
   description: "using the for...in construct to iterate",
   test: function(){
-//    var lis = $.makeArray($("li"));
     var lis = $.makeArray($("li.bang", slashdot));
     for (var i in lis) {
       var li = $(lis[i]);
@@ -241,12 +215,12 @@ var tests = [[{
   name: "With tag",
   description: "Using a tag with an id selector",
   test: function(){
-    $("div#ft", slashdot)
+    $("div#ft", slashdot);
   }
 }, {
   name: "Without tag",
   description: "Not using a tag with an id selector",
   test: function(){
-    $("#ft", slashdot)
+    $("#ft", slashdot);
   }
 }]];
