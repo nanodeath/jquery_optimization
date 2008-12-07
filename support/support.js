@@ -1,32 +1,50 @@
+// Load up jQuery from our friends at Google
 google.load("jquery", "1");
+// And load up the column chart visualization thingy
 google.load("visualization", "1", {
   packages: ["columnchart"]
 });
 
+// This comes in handy in a couple places...
 function randomize_array(arr){
   return arr.sort(function(){
     return 0.5 - Math.random()
   });
 };
 
+// These are generic callbacks that are sufficient for all/most tests
 var precanned_callbacks = {
+  // These are callbacks for the main race: initialization, in_progress, and done
   race: {
     initialize_main: function(race){
+      // Save the race
       this.race = race;
+      // Create a new data table to stick data in
       var data = new google.visualization.DataTable();
+      // Doesn't really matter, but this is the first column
       data.addColumn("string", "tests");
       
+      // We need to get a list of the indexes of the
+      // tests we're printing, and in what order
       var tests_to_print = [];
+      // this just pushes on indexes from 1 to race.length
       for (var i = 1; i < race.length; i++) {
         tests_to_print.push(i);
       };
+      // and randomize
       this.tests_to_print = randomize_array(tests_to_print);
       
       for (var i = 0; i < this.tests_to_print.length; i++) {
-        real_i = this.tests_to_print[i] - 1;
-        data.addColumn("number", race[real_i + 1].name);
+        // pull out the actual index we want
+        real_i = this.tests_to_print[i];
+        // and tack it on as another column
+        data.addColumn("number", race[real_i].name);
+        // repeat for all columns
       };
+      // We only have one data set, so just the one row
       data.addRows(1);
+      // This means we don't get a caption directly underneath the bar,
+      // which is fine
       data.setValue(0, 0, '');
       
       for (var i = 0; i < this.tests_to_print.length; i++) {
