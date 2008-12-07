@@ -133,6 +133,10 @@ google.setOnLoadCallback(function(){
   // Save the slashdot document for easy reference in the tests
   slashdot = $("iframe")[0].contentDocument;
   
+  // Show main, now that the page is finally loaded
+  $("#main").show();
+  $("#please_wait").hide();
+  
   $.each(tests, function(){
     // Save the metadata
     var meta = this[0];

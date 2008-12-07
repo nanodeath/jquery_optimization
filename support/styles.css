@@ -33,3 +33,7 @@
 #test_dom {
     clear: both;
 }
+
+#main {
+  display:none;
+}
