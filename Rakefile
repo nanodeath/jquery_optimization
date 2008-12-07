@@ -3,7 +3,7 @@ task :jsmin do
 end
 
 task :commit => [:jsmin] do
-  exec 'git commit -a'
+  system('git commit -a')
 end
 
 task :pull do
