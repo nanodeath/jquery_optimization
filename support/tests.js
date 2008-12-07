@@ -24,7 +24,7 @@ var tests = [[{
     $("#firehoselist .article", slashdot)
   }
 }], [{
-  runs: 200,
+  runs: 100,
   id: 'hide_vs_display',
   title: "Methods of hiding a selection",
   description: "Which is faster, hiding with hide() or setting an attribute?",
@@ -75,7 +75,7 @@ var tests = [[{
     });
   }
 }, ], [{
-  runs: 200,
+  runs: 100,
   id: 'not_saving_object',
   title: "Saving selection in an object vs. not (applied example)",
   description: "How much difference is there in saving a selection?  Let us test by grabbing a selection 6 times.</p><p>Note: This is an applied example, meaning I threw in some other stuff to make things more interesting/relevant, but affects the results.",
@@ -115,7 +115,7 @@ var tests = [[{
     t.show();
   },
 }], [{
-  runs: 100,
+  runs: 50,
   id: 'find_vs_children',
   title: "Using find() when you could be using children()",
   description: "How much of a difference is there really?  Chances are you've made this mistake at least once before -- avoid find() whenever you can.",
@@ -194,7 +194,7 @@ var tests = [[{
     }
   }
 }], [{
-  runs: 200,
+  runs: 100,
   id: "not_saving_jq_this",
   title: "Does it hurt to not save $(this)?",
   description: "How much does it actually impact code to not save $(this) in a local variable?  Let's find out by testing it 4 times.",
@@ -209,26 +209,26 @@ var tests = [[{
   name: "Saving jQuery(this)",
   description: "Saving jQuery(this) in a variable",
   test: function(){
-    $("li").each(function(){
+    $("li.bang", slashdot).each(function(){
       var me = $(this);//.hide();
       me;//.show();
       me;//.hide();
       me;//.show();
-    })
+    });
   }
 }, {
   name: "Not saving jQuery(this)",
   description: "Not saving jQuery(this) in a variable",
   test: function(){
-    $("li").each(function(){
+    $("li.bang", slashdot).each(function(){
       $(this);//.hide();
       $(this);//.show();
       $(this);//.hide();
       $(this);//.show();
-    })
+    });
   }
 }], [{
-  runs: 200,
+  runs: 100,
   id: 'unnecessary_id_tag',
   title: "<abbr title='Too Much Information'>TMI</abbr>: Tag + id, should you specify the tag at all?",
   description: "If you're already calling out an id, you don't need to also specify a tag.  Why?  Because ids are already unique, and this just forces another O(n) iteration.",
@@ -241,12 +241,12 @@ var tests = [[{
   name: "With tag",
   description: "Using a tag with an id selector",
   test: function(){
-    $("li#last_one")
+    $("div#ft", slashdot)
   }
 }, {
   name: "Without tag",
   description: "Not using a tag with an id selector",
   test: function(){
-    $("#last_one")
+    $("#ft", slashdot)
   }
 }]];
