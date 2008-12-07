@@ -250,3 +250,4 @@ var tests = [[{
     $("#ft", slashdot)
   }
 }]];
+var moo;

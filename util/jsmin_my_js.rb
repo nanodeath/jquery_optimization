@@ -9,6 +9,5 @@ js_files.each do |f|
   out.insert(-2, 'min')
   out = out.join('.')
   `#{dir}/util/jsmin.rb < #{f} > #{out}`
-  `git add #{out}`
 end
 
