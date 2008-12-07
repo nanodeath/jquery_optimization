@@ -86,8 +86,9 @@ var precanned_callbacks = {
   }
 }
 
-
+var slashdot = null;
 google.setOnLoadCallback(function(){
+  slashdot = $("iframe")[0].contentDocument;
   $.each(tests, function(){
     var meta = this[0];
     var all = $("<div class=\"test\" id=\"" + meta.id + "\">").appendTo("#tests");

@@ -1,5 +1,5 @@
 var tests = [[{
-  runs: 200,
+  runs: 50,
   id: 'not_using_id',
   title: "Not using an id as the top-most selector",
   description: "With a long DOM, not using an id to narrow one's search can be bad.",
@@ -13,13 +13,15 @@ var tests = [[{
   name: 'Without id',
   description: "Not using an id as the top selector",
   test: function(){
-    $(".top_class");
+    //$(".top_class");
+    $(".article", slashdot)
   }
 }, {
   name: 'With id',
   description: "Using an id as the top selector",
   test: function(){
-    $("#test_dom .top_class");
+    //$("#test_dom .top_class");
+    $("#firehoselist .article", slashdot)
   }
 }], [{
   runs: 200,
@@ -35,32 +37,42 @@ var tests = [[{
   name: 'display none',
   description: "Using attr('display', 'none') to hide a selection",
   teardown: function(){
-    $("#has_an_id_too").attr("display", '');
+    //$("#has_an_id_too").attr("display", '');
+    $("#firehoselist", slashdot).attr("display", '');
   },
   test: function(){
-    $("#has_an_id_too").attr('display', 'none');
+    //$("#has_an_id_too").attr('display', 'none');
+    $("#firehoselist", slashdot).attr("display", 'none');
   }
 }, {
   name: 'hide()',
   description: "Using hide() to hide a selection",
   teardown: function(){
-    $("#has_an_id_too").show();
+    //$("#has_an_id_too").show();
+    $("#firehoselist", slashdot).show();
   },
   test: function(){
-    $("#has_an_id_too").hide();
+    //$("#has_an_id_too").hide();
+    $("#firehoselist", slashdot).hide();
   }
 }, {
   name: 'attribute',
   description: "Using the DOM property to set display to none",
   teardown: function(){
-    $("#has_an_id_too").each(function(){
+//    $("#has_an_id_too").each(function(){
+//      this.style.display = '';
+//    });
+    $("#firehoselist", slashdot).each(function(){
       this.style.display = '';
-    })
+    });
   },
   test: function(){
-    $("#has_an_id_too").each(function(){
+//    $("#has_an_id_too").each(function(){
+//      this.style.display = 'none';
+//    });
+    $("#firehoselist", slashdot).each(function(){
       this.style.display = 'none';
-    })
+    });
   }
 }, ], [{
   runs: 200,
@@ -77,68 +89,73 @@ var tests = [[{
   name: "Not saving selection",
   description: "Using $ to grab the same selection",
   test: function(){
-    $(".top_class").hide();
-    $(".top_class").show();
-    $(".top_class").hide();
-    $(".top_class").show();
-    $(".top_class").hide();
-    $(".top_class").show();
+//    $(".top_class").hide();
+//    $(".top_class").show();
+//    $(".top_class").hide();
+//    $(".top_class").show();
+//    $(".top_class").hide();
+//    $(".top_class").show();
+    $("#firehoselist", slashdot).hide();
+    $("#firehoselist", slashdot).show();
+    $("#firehoselist", slashdot).hide();
+    $("#firehoselist", slashdot).show();
+    $("#firehoselist", slashdot).hide();
+    $("#firehoselist", slashdot).show();
   },
-  teardown: function(){
-    $(".top_class").show();
-  }
 }, {
   name: "Saving a selection",
   description: "Only using $ once to grab the selection",
   test: function(){
-    var t = $(".top_class").hide();
+    //var t = $(".top_class").hide();
+    var t = $("#firehoselist", slashdot).hide();
     t.show();
     t.hide();
     t.show();
     t.hide();
     t.show();
   },
-  teardown: function(){
-    $(".top_class").show();
-  }
 }], [{
-  runs: 200,
+  runs: 100,
   id: 'find_vs_children',
   title: "Using find() when you could be using children()",
-  description: "How much of a difference is there really?",
+  description: "How much of a difference is there really?  Chances are you've made this mistake at least once before -- avoid find() whenever you can.",
   callbacks: {
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
   },
   chart_width: 500,
-  explanation: "find() searches the entire DOM below an element, whereas children() only checks the DOM immediately below the element.  If you only need to check the children, use children()!  As for why the CSS selectors are slower, or why the relationship appears to be switched between children and find, my only guess is that css find does something like document.getElementById('top_list').getElementsByClassName('turtle'), whereas css children gets document.getElementsByClassName('turtle') and then has to iterate over each one to check its parent."
+  explanation: "find() searches the entire DOM below an element, whereas children() only checks the DOM immediately below the element.  If you only need to check the children, use children()!"//  As for why the CSS selectors are slower, or why the relationship appears to be switched between children and find, my only guess is that css find does something like document.getElementById('top_list').getElementsByClassName('turtle'), whereas css children gets document.getElementsByClassName('turtle') and then has to iterate over each one to check its parent."
 }, {
   name: "find()",
   description: 'Using find to get a class',
   test: function(){
-    $("#top_list").find(".turtle");
+//    $("#top_list").find(".turtle");
+    $("#firehoselist", slashdot).find('.article');
   }
 }, {
   name: 'children()',
   description: 'Using children to get a class',
   test: function(){
-    $("#top_list").children(".turtle");
+//    $("#top_list").children(".turtle");
+    $("#firehoselist", slashdot).children('.article');
   }
 }, {
   name: "css selector: find",
   description: 'Using css find to get a class',
   test: function(){
-    $("#top_list .turtle");
+//    $("#top_list .turtle");
+    $("#firehoselist .article", slashdot);
   }
 }, {
   name: 'css selector: children',
   description: 'Using css children to get a class',
   test: function(){
-    $("#top_list > .turtle");
+//    $("#top_list > .turtle");
+    $("#firehoselist > .article", slashdot);
   }
 }], [{
-  runs: 250,
+  runs: 100,
   id: "each_vs_for",
   title: "jQuery each vs JavaScript loops",
   description: "Is it slower?",
@@ -151,7 +168,8 @@ var tests = [[{
   name: "each()",
   description: "using each to iterate over a selection",
   test: function(){
-    $("li").each(function(){
+//    $("li").each(function(){
+    $("li.bang", slashdot).each(function(){
       var li = $(this);
     });
   }
@@ -159,7 +177,8 @@ var tests = [[{
   name: "for, indexed",
   description: "using a for loop to iterate over elements",
   test: function(){
-    var lis = $("li");
+//    var lis = $("li");
+    var lis = $("li.bang", slashdot);
     for (var i = 0, len = lis.length; i < len; i++) {
       var li = $(lis[i]);
     }
@@ -168,7 +187,8 @@ var tests = [[{
   name: "for...in",
   description: "using the for...in construct to iterate",
   test: function(){
-    var lis = $.makeArray($("li"));
+//    var lis = $.makeArray($("li"));
+    var lis = $.makeArray($("li.bang", slashdot));
     for (var i in lis) {
       var li = $(lis[i]);
     }
