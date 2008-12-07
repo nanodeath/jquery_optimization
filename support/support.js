@@ -3,8 +3,6 @@ google.load("visualization", "1", {
   packages: ["columnchart"]
 });
 
-var tests_to_run = [];
-
 function randomize_array(arr){
   return arr.sort(function(){
     return 0.5 - Math.random()
@@ -85,9 +83,14 @@ var precanned_callbacks = {
 
 var slashdot = null;
 google.setOnLoadCallback(function(){
+  // Save the slashdot document for easy reference in the tests
   slashdot = $("iframe")[0].contentDocument;
+  
   $.each(tests, function(){
+    // Save the metadata
     var meta = this[0];
+    
+    // This is the all-encompassing div.  We make one for each race
     var all = $("<div class=\"test\" id=\"" + meta.id + "\">").appendTo("#tests");
     var title = $("<h2 class=\"title\">" + meta.title + "</h2>").appendTo(all);
     var description = $("<div class=\"description\">").append("<h3>Race Description</h3>").append("<p>" + meta.description + "</p>").append("<p>Runs: " + meta.runs + "</p>").appendTo(all);
@@ -111,18 +114,19 @@ google.setOnLoadCallback(function(){
     
     var race = this;
     
-    $("<button>Run race</button>").click(function(){
+    $("<button class='start'>Run race</button>").click(function(){
       $(this).hide();
       var times = [];
       for (var j = 1; j < race.length; j++) {
         times[j - 1] = 0;
       };
-      tests_to_run = [];
       var timer;
+      var tests_to_run = [];
       for (var i = 0; i < meta['runs']; i++) {
         tests_to_run.push(function(){
           for (var j = 1; j < race.length; j++) {
           
+            // Run the setup for the current test, if it has one
             if ($.isFunction(race[j].setup)) {
               try {
                 race[j].setup()
@@ -131,37 +135,58 @@ google.setOnLoadCallback(function(){
               }
             };
             
+            // Ready, steady...
             timer = new Date();
             
+            // go!
             race[j].test();
             
+            // stop...
             var incremental_time = new Date() - timer;
+            
+            // and chalk up the time
             times[j - 1] += incremental_time;
             
+            // Run the teardown for the current test, if it has one
             if ($.isFunction(race[j].teardown)) {
               try {
                 race[j].teardown();
               } catch (e) {
                 throw ("Teardown " + j + " failed for test \"" + meta.title + "\": " + e);
-              };
-                          };
-                      };
+              }
+            }
+          };
+          // Execute the in_progress callback, giving it our current times
           meta.callbacks.in_progress(times);
+          // we hand our caller (run_next_test) the times so that when
+          // it comes time to execute the done callback, run_next_test
+          // will be able to do it.
           return times;
         });
       };
+      // Execute the initialize callback, giving it the race we're starting
       meta.callbacks.initialize(race);
-      run_next_test(0, race);
+      // Get the ball rolling
+      run_test(tests_to_run, 0, race);
     }).appendTo(results);
   });
 });
-var run_next_test = function(test_number, test){
+// this function is necessary because it can call itself
+// when it's done with a small delay -- helpful so that
+// the browser doesn't become unresponsive
+var run_test = function(tests_to_run, test_number, test){
   var times = tests_to_run[test_number](test_number);
   if (test_number + 1 < tests_to_run.length) {
+    // run the next test after waiting a bit
     setTimeout(function(){
-      run_next_test(test_number + 1, test)
+      run_test(tests_to_run, test_number + 1, test)
     }, 25);
   } else {
-    test[0].callbacks.done(times);
+    // all done, execute done callback
+    try {
+      test[0].callbacks.done(times);
+    } catch (e) {
+      throw ("Done callback failed: " + e)
+    }
   }
 }
