@@ -207,7 +207,7 @@ var tests = [[{
 }], [{
   runs: 200,
   id: 'unnecessary_id_tag',
-  title: "TMI: More specific selectors aren't always better",
+  title: "<abbr title='Too Much Information'>TMI</abbr>: More specific selectors aren't always better",
   description: "If you're already calling out an id, you don't need to also specify a tag.  Why?  Because ids are already unique, and this just forces another O(n) iteration.",
   callbacks: {
     initialize: precanned_callbacks.race.initialize_main,
