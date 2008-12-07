@@ -7,7 +7,8 @@ var tests = [[{
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }
+  },
+  explanation: "When you're not using an id as your first selector, you end up running your selection over <em>your entire DOM</em>.  And chances are, it's a lot bigger than the one on this page.  Use an id selector whenever possible -- it's the fastest way to narrow the scope of your search."
 }, {
   name: 'Without id',
   description: "Not using an id as the top selector",
@@ -29,7 +30,7 @@ var tests = [[{
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }
+  }, explanation: "Setting the attribute directly on the DOM object will naturally be the fastest, as it's not a method call and it's what the other methods ultimately end up doing.  But why is using attr so much faster than hide()?  Turns out hide() does a lot of behind the scenes magic that most likely, you don't even need."
 }, {
   name: 'display none',
   description: "Using attr('display', 'none') to hide a selection",
@@ -70,7 +71,8 @@ var tests = [[{
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }, chart_width: 500
+  }, chart_width: 500,
+  explanation: "This one is fairly obvious.  Why make jQuery find you a selection each time when you can just...save it?"
 }, {
   name: "Not saving selection",
   description: "Using $ to grab the same selection",
@@ -109,7 +111,8 @@ var tests = [[{
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
   },
-  chart_width: 500
+  chart_width: 500,
+  explanation: "find() searches the entire DOM below an element, whereas children() only checks the DOM immediately below the element.  If you only need to check the children, use children()!  As for why the CSS selectors are slower, or why the relationship appears to be switched between children and find, my only guess is that css find does something like document.getElementById('top_list').getElementsByClassName('turtle'), whereas css children gets document.getElementsByClassName('turtle') and then has to iterate over each one to check its parent."
 }, {
   name: "find()",
   description: 'Using find to get a class',
@@ -143,14 +146,13 @@ var tests = [[{
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }
+  }, explanation: "I'm not discouraging the use of each(), but just be aware that it has a non-zero performance impact."
 }, {
   name: "each()",
   description: "using each to iterate over a selection",
   test: function(){
     $("li").each(function(){
       var li = $(this);
-      $(this);
     });
   }
 }, {
@@ -181,7 +183,8 @@ var tests = [[{
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
   },
-  chart_width: 500
+  chart_width: 500,
+  explanation: "Not saving jQuery(this) does appear to have a small performance impact.  You might as well go ahead and save it."
 }, {
   name: "Saving jQuery(this)",
   description: "Saving jQuery(this) in a variable",
@@ -207,13 +210,13 @@ var tests = [[{
 }], [{
   runs: 200,
   id: 'unnecessary_id_tag',
-  title: "<abbr title='Too Much Information'>TMI</abbr>: More specific selectors aren't always better",
+  title: "<abbr title='Too Much Information'>TMI</abbr>: Tag + id, should you specify the tag at all?",
   description: "If you're already calling out an id, you don't need to also specify a tag.  Why?  Because ids are already unique, and this just forces another O(n) iteration.",
   callbacks: {
     initialize: precanned_callbacks.race.initialize_main,
     in_progress: precanned_callbacks.race.in_progress_main,
     done: precanned_callbacks.race.done_main
-  }
+  }, explanation: "It's surprising that it has this much of a performance impact, but really, if you're using an id selector...you don't need to further qualify the object.  It will only make the search slower."
 }, {
   name: "With tag",
   description: "Using a tag with an id selector",

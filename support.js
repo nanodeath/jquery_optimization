@@ -14,6 +14,7 @@ function randomize_array(arr){
 var precanned_callbacks = {
   race: {
     initialize_main: function(race){
+      this.race = race;
       var data = new google.visualization.DataTable();
       data.addColumn("string", "tests")
       
@@ -70,6 +71,17 @@ var precanned_callbacks = {
     },
     done_main: function(times){
       this.redraw_graph(times);
+      var exp = this.race[0].explanation;
+      if(exp){
+        var results_div = $('#' + this.race[0].id + " .results");
+        var exp_div;
+        setTimeout(function(){
+          exp_div = $("<div class=\"explanation\"><h4>Explanation</h4></div>").hide().appendTo(results_div).slideDown();
+        }, 500);
+        setTimeout(function(){
+          $("<span>" + exp + "</span>").hide().appendTo(exp_div).slideDown();
+        }, 1500);
+      }
     }
   }
 }
