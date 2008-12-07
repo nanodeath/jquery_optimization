@@ -8,5 +8,5 @@ end
 
 task :pull do
   `git pull`
-  `util/jsmin_my_js.rb`
+  Rake::Task[:jsmin].execute
 end
