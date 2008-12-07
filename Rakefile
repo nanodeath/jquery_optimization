@@ -1,5 +1,5 @@
 task :jsmin do
-  `util/jsmin_my_js.rb`
+  system('util/jsmin_my_js.rb')
 end
 
 task :commit => [:jsmin] do
@@ -7,6 +7,11 @@ task :commit => [:jsmin] do
 end
 
 task :pull do
-  `git pull`
+  system('git pull')
   Rake::Task[:jsmin].execute
+end
+
+task :cleanup do
+  FileUtils.rm(Dir['./support/*.min.js'])
+  FileUtils.rm(Dir['./**/*~'])
 end

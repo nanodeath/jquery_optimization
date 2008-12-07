@@ -54,7 +54,7 @@ var precanned_callbacks = {
           title: "Result after " + this.runs_count + " runs"
         });
       };
-
+      
       this.runs_count = 0;
       
       this.redraw_graph();
@@ -144,8 +144,8 @@ google.setOnLoadCallback(function(){
               } catch (e) {
                 throw ("Teardown " + j + " failed for test \"" + meta.title + "\": " + e);
               };
-            };
-          };
+                          };
+                      };
           meta.callbacks.in_progress(times);
           return times;
         });
