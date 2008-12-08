@@ -215,12 +215,12 @@ var tests = [[{
   name: "With tag",
   description: "Using a tag with an id selector",
   test: function(){
-    $("div#ft", slashdot);
+    var t = $("div#ft", slashdot);
   }
 }, {
   name: "Without tag",
   description: "Not using a tag with an id selector",
   test: function(){
-    $("#ft", slashdot);
+    var t = $("#ft", slashdot);
   }
 }]];
